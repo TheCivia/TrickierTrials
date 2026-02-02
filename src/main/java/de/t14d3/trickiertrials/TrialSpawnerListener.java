@@ -13,6 +13,7 @@ import org.bukkit.event.entity.TrialSpawnerSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -233,6 +234,11 @@ public class TrialSpawnerListener implements Listener {
         if (glowingEffect) {
             event.getEntity().setGlowing(true);
         }
+
+        // Add fire resistance effect to spawned mobs
+        PotionEffect fireResistance = new PotionEffect(
+                org.bukkit.potion.PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE, 0, false, false);
+        fireResistance.apply((LivingEntity)  event.getEntity());
 
         LivingEntity entity = (LivingEntity) event.getEntity();
         switch (trialTiers) {
