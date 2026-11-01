@@ -9,9 +9,11 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class TrialDeathListener implements Listener {
 
+    static final NamespacedKey KEY = new NamespacedKey("trickiertrials", "trialspawned");
+
     @EventHandler
     public void onMobDeath(EntityDeathEvent event) {
-        if (event.getEntity().getPersistentDataContainer().has(new NamespacedKey("trickiertrials", "trialspawned"), PersistentDataType.INTEGER)) {
+        if (event.getEntity().getPersistentDataContainer().has(KEY, PersistentDataType.INTEGER)) {
             event.getDrops().removeIf(item -> item.getType() != Material.BREEZE_ROD && item.getType() != Material.ROTTEN_FLESH && item.getType() != Material.BONE && item.getType() != Material.ARROW);
         }
     }

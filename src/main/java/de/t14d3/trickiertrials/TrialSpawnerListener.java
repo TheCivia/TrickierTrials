@@ -1,6 +1,5 @@
 package de.t14d3.trickiertrials;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -18,6 +17,7 @@ import org.bukkit.potion.PotionEffect;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TrialSpawnerListener implements Listener {
 
@@ -40,14 +40,18 @@ public class TrialSpawnerListener implements Listener {
         EXTREME
     }
 
+    // Attributes can be missing on some trial mobs (a breeze has no attack damage); a null used to
+    // throw, which skipped the trialspawned tag and with it the drop filter.
     public void healthMultiplier(LivingEntity entity, double healthMultiplier) {
-        AttributeInstance maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        AttributeInstance maxHealth = entity.getAttribute(Attribute.MAX_HEALTH);
+        if (maxHealth == null) return;
         maxHealth.setBaseValue(maxHealth.getBaseValue() * healthMultiplier);
         entity.setHealth(maxHealth.getValue());
     }
 
     public void damageMultiplier(LivingEntity entity, double damageMultiplier) {
-        AttributeInstance attackDamage = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+        AttributeInstance attackDamage = entity.getAttribute(Attribute.ATTACK_DAMAGE);
+        if (attackDamage == null) return;
         attackDamage.setBaseValue(attackDamage.getBaseValue() * damageMultiplier);
     }
 
@@ -231,16 +235,22 @@ public class TrialSpawnerListener implements Listener {
             trialTiers = TrialTiers.DEFAULT;
         }
 
+        if (!(event.getEntity() instanceof LivingEntity entity)) {
+            return;
+        }
+
+        // Tag first: the drop filter must apply even if something below fails
+        entity.getPersistentDataContainer().set(TrialDeathListener.KEY, PersistentDataType.INTEGER, 1);
+
         if (glowingEffect) {
-            event.getEntity().setGlowing(true);
+            entity.setGlowing(true);
         }
 
         // Add fire resistance effect to spawned mobs
         PotionEffect fireResistance = new PotionEffect(
                 org.bukkit.potion.PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE, 0, false, false);
-        fireResistance.apply((LivingEntity)  event.getEntity());
+        fireResistance.apply(entity);
 
-        LivingEntity entity = (LivingEntity) event.getEntity();
         switch (trialTiers) {
             case NORMAL:
                 healthMultiplier(entity, 1.1);
@@ -267,15 +277,14 @@ public class TrialSpawnerListener implements Listener {
         // Randomly assign a sword if the entity has no item in the main hand
         assignRandomSword(entity);
 
-        entity.getPersistentDataContainer().set(new NamespacedKey("trickiertrials", "trialspawned"), PersistentDataType.INTEGER, 1);
-
 
         // Easter Egg
-        if (secret && entity instanceof Breeze && RandomUtils.nextDouble(0, 1) < 0.05) {
+        if (secret && entity instanceof Breeze && ThreadLocalRandom.current().nextDouble() < 0.05) {
             entity.setCustomName(secretName);
             entity.setCustomNameVisible(true);
             healthMultiplier(entity, 4);
-            entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(1.2);
+            AttributeInstance speed = entity.getAttribute(Attribute.MOVEMENT_SPEED);
+            if (speed != null) speed.setBaseValue(1.2);
         }
     }
 }

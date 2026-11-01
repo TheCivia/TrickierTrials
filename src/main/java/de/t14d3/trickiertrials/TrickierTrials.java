@@ -71,11 +71,12 @@ public final class TrickierTrials extends JavaPlugin implements CommandExecutor 
         secretName = config.getString("easter-egg-name", "Klein Tiade");
 
         // Config migrator
+        // Numbers, not strings: getInt on "10 #comment" returned 0 (instant decay/regeneration)
         if (config.get("decay-delay") == null) {
-            config.set("decay-delay", "10 #Decay delay in seconds");
+            config.set("decay-delay", 10);
         }
         if (config.get("regenerate-delay") == null) {
-            config.set("regenerate-delay", "10 #Regeneration delay in seconds, plus a random delay of up to 100 ticks");
+            config.set("regenerate-delay", 10);
         }
         if (config.get("mining-fatigue-level") == null) {
             config.set("mining-fatigue-level", 2);

@@ -1,5 +1,5 @@
 name: TrickierTrials
-version: '${version}'
+version: '${project.version}'
 main: de.t14d3.trickiertrials.TrickierTrials
 author: t14d3
 api-version: '1.21'
