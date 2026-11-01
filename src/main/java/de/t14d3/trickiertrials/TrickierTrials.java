@@ -32,7 +32,14 @@ public final class TrickierTrials extends JavaPlugin implements CommandExecutor 
 
         // Register event listeners
         this.getServer().getPluginManager().registerEvents(new TrialSpawnerListener(this, strengthenTrialMobs, glowingEffect, secret, secretName), this);
-        this.getServer().getPluginManager().registerEvents(new TrialChamberProtector(this, getTrialChamberMaterials(), decayPlacedBlocks, regenerateBrokenBlocks), this);
+        // The protector listens to every block break/place on the server, looks up structures each time and
+        // remembers placed blocks in memory; only register it when one of its features is actually on.
+        boolean protectorNeeded = decayPlacedBlocks
+                || (regenerateBrokenBlocks && !getTrialChamberMaterials().isEmpty())
+                || getConfig().getInt("modules.mining-fatigue") > 0;
+        if (protectorNeeded) {
+            this.getServer().getPluginManager().registerEvents(new TrialChamberProtector(this, getTrialChamberMaterials(), decayPlacedBlocks, regenerateBrokenBlocks), this);
+        }
         this.getServer().getPluginManager().registerEvents(new TrialDeathListener(), this);
         this.getServer().getPluginManager().registerEvents(new TrialVaultRefresher(this, trialVaultResetTime), this);
 
@@ -71,11 +78,12 @@ public final class TrickierTrials extends JavaPlugin implements CommandExecutor 
         secretName = config.getString("easter-egg-name", "Klein Tiade");
 
         // Config migrator
+        // Numbers, not strings: getInt on "10 #comment" returned 0 (instant decay/regeneration)
         if (config.get("decay-delay") == null) {
-            config.set("decay-delay", "10 #Decay delay in seconds");
+            config.set("decay-delay", 10);
         }
         if (config.get("regenerate-delay") == null) {
-            config.set("regenerate-delay", "10 #Regeneration delay in seconds, plus a random delay of up to 100 ticks");
+            config.set("regenerate-delay", 10);
         }
         if (config.get("mining-fatigue-level") == null) {
             config.set("mining-fatigue-level", 2);
