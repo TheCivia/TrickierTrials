@@ -1,0 +1,44 @@
+blocks-to-protect:
+  - COPPER_BLOCK
+  - WAXED_COPPER_BLOCK
+  - WEATHERED_COPPER
+  - WAXED_WEATHERED_COPPER
+  - EXPOSED_COPPER
+  - WAXED_EXPOSED_COPPER
+  - OXIDIZED_COPPER
+  - WAXED_OXIDIZED_COPPER
+  - CUT_COPPER
+  - WAXED_CUT_COPPER
+  - OXIDIZED_CUT_COPPER
+  - WAXED_OXIDIZED_CUT_COPPER
+  - WAXED_CHISELED_COPPER
+  - WAXED_OXIDIZED_CHISELED_COPPER
+  - POLISHED_TUFF
+  - TUFF_BRICKS
+  - CHISELED_TUFF_BRICKS
+  - CHISELED_TUFF
+  - WAXED_CUT_COPPER_STAIRS
+  - WAXED_OXIDIZED_CUT_COPPER_STAIRS
+  - WAXED_OXIDIZED_CUT_COPPER_SLAB
+  - WAXED_CUT_COPPER_SLAB
+  - WAXED_COPPER_GRATE
+  - WAXED_OXIDIZED_COPPER_GRATE
+  - LADDER
+  - LIGHT_GRAY_STAINED_GLASS
+  - WAXED_COPPER_BULB
+  - WAXED_EXPOSED_COPPER_BULB
+  - WAXED_WEATHERED_COPPER_BULB
+  - WAXED_OXIDIZED_COPPER_BULB
+
+glowing-effect: true
+mining-fatigue-level: 2 # Set to 0 to disable
+
+decay-placed-blocks: true
+decay-delay: 10 # Decay delay in seconds
+regenerate-broken-blocks: true
+regenerate-delay: 10 # Regeneration delay in seconds, plus a random delay of up to 100 ticks
+strengthen-trial-mobs: true
+
+trial-vault-reset-time: 86400000 # Time in Milliseconds, set to -1 to disable. Default is 24 hours (1000 * 60 * 60 * 24 = 86400000)
+
+vault-locked-message: "<red>This vault cannot be opened yet, Try again after <time>"
