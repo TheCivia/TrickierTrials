@@ -14,6 +14,7 @@ Fork pluginu [TrickierTrials](https://github.com/t14d3/TrickierTrials) (t14d3) p
   - cooldown vaultů přes Paper API (`org.bukkit.block.Vault`, PDC `TileState`), **bez NMS a reflexe**,
   - názvy atributů pro 26.3 s kontrolou `null` (breeze dřív shodil zpracování spawnu a jeho dropy se nefiltrovaly),
   - Maven build proti Paper API 26.3 / Java 25, Gradle odstraněný.
+- `thecivia/store-1.4.0`: samostatný import ze zipu (bez historie upstreamu), také verze 1.4.0-civia s cooldownem vaultů přes Paper API a Maven buildem. Ochrana chamberu je tu jen zaregistrovaná, když je některá její funkce zapnutá, ale chybí oprava úniku paměti z `fix/memory-leak-and-reload-perm`.
 
 ## Config (výběr)
 | Klíč | Výchozí | K čemu |
